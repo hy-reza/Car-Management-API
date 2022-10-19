@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
-        isPrimaryKey: true,
+        primaryKey: true,
         validate: {
           notEmpty: true,
         },
@@ -43,7 +43,9 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      freezeTableName: true,
+      tableName: 'Users',
+      timestamps: true,
     }
   );
+  return User;
 };

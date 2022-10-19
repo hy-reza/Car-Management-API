@@ -1,0 +1,76 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Car-Management-API",
+    "description": "Challenge 6 Binar - Car Management API",
+    "contact": {
+      "email": "hyrezaalf@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "users",
+      "description": "Everything about users"
+    }
+  ],
+  "paths": {
+    "/users/api/v1": {
+      "get": {
+        "tags": ["users"],
+        "summary": "Get all Users",
+        "description": "Dapatkan semua data list pengguna",
+        "operationId": "getUsers",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/users"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Pet not found"
+          },
+          "405": {
+            "description": "Validation exception"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "users": {
+        "required": ["name", "photoUrls"],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["success", "failed"],
+            "example": "success"
+          },
+          "message": {
+            "type": "string",
+            "example": "Successfully got all users list"
+          },
+          "data": {
+            "type": "object",
+            "example": {}
+          }
+        }
+      }
+    }
+  }
+}
