@@ -1,17 +1,17 @@
 module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define(
-    "User",
+  const Car = sequelize.define(
+    "Car",
     {
       id: {
-        type: DataTypes.STRING,
+        type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
-        allowNull: false,
         primaryKey: true,
+        allowNull: false,
         validate: {
           notEmpty: true,
         },
       },
-      name: {
+      car_name: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
@@ -19,38 +19,60 @@ module.exports = (sequelize, DataTypes) => {
           len: [3, 100],
         },
       },
-      email: {
+      car_size: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: true,
-          isEmail: true,
+          len: [3, 100],
         },
       },
-      password: {
+      car_type: {
         type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+          len: [3, 100],
+        },
+      },
+      car_photo: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        validate: {
+          notEmpty: false,
+        },
+      },
+      car_price: {
+        type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
           notEmpty: true,
         },
       },
-      role: {
-        type: DataTypes.STRING,
+      car_availability: {
+        type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: "member",
         validate: {
           notEmpty: true,
         },
       },
-      refreshToken: {
-        type: DataTypes.TEXT,
+      crietedBy: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      updatedBy: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      deletedBy: {
+        type: DataTypes.STRING,
         allowNull: true,
       },
     },
     {
-      tableName: "Users",
+      tableName: "Cars",
       timestamps: true,
     }
   );
-  return User;
+  return Car;
 };

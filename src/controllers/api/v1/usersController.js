@@ -6,15 +6,10 @@ const {
   updateUser,
   removeUser,
 } = require("../../../services/userService.js");
+const { findUserByToken } = require("../../../services/authService.js");
 
 const argon2 = require("argon2");
-
-const errorMessage = (error, res) => {
-  res.status(500).json({
-    status: "error",
-    message: error.message,
-  });
-};
+const errorMessage = require("../../../services/errorMessage.js");
 
 exports.getUsers = async (req, res) => {
   try {
@@ -49,6 +44,32 @@ exports.getUserById = async (req, res) => {
   } catch (error) {
     errorMessage(error, res);
     console.error(error);
+  }
+};
+
+exports.getCurrentUser = async (req, res) => {
+  let token = req.cookies.refreshToken;
+  if (!token)
+    return res.status(203).json({
+      status: "error",
+      message: "Error you have no authoritative information ",
+    });
+  try {
+    const findedUser = await findUserByToken(token);
+    if (!findedUser)
+      return res.status(404).json({
+        status: "error",
+        message: `Error user with with auth cridential : ${token} not found`,
+      });
+    const { id, name, email, role } = findedUser;
+    res.status(200).json({
+      status: "success",
+      message: `Successfully got current user with auth cridential : ${token}`,
+      data: { id, name, email, role },
+    });
+  } catch (error) {
+    console.error(error);
+    errorMessage(error, res);
   }
 };
 

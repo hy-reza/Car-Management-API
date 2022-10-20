@@ -17,7 +17,6 @@ exports.findOne = (id) => {
 
 exports.findOneByEmail = (email) => {
   return User.findOne({
-    attributes: ["id", "name", "email", "role"],
     where: {
       email,
     },
