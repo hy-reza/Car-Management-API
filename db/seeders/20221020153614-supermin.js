@@ -1,5 +1,6 @@
 "use strict";
 const uuid4 = require("uuid4");
+const argon2 = require("argon2");
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -17,9 +18,10 @@ module.exports = {
       [
         {
           id: uuid4(),
-          name: "supermin",
+          name: "Bro Supermin",
           email: "supermin@gmail.com",
-          password: "$argon2id$v=19$m=65536,t=3,p=4$d1yWwnU6twkg4YhCcrz/tg$5eU+XfUlwF4DP7s50O9NSyB3IjniUnNgNYIPhZFhcLM", // = pass123 
+          // password: "$argon2id$v=19$m=65536,t=3,p=4$d1yWwnU6twkg4YhCcrz/tg$5eU+XfUlwF4DP7s50O9NSyB3IjniUnNgNYIPhZFhcLM", // = pass123 
+          password: await argon2.hash('pass123'), // = pass123 
           role: "super admin",
           refreshToken: "",
           createdAt: new Date(),

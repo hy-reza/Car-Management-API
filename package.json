@@ -7,7 +7,11 @@
   "type": "commonjs",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon ./src/index.js"
+    "start": "nodemon ./src/index.js",
+    "db:create": "npx sequelize db:create",
+    "db:roolback": "npx sequelize db:migrate:undo:all",
+    "db:migrate": "npx sequelize db:migrate",
+    "db:seeds": "npx sequelize db:seed:all"
   },
   "dependencies": {
     "@faker-js/faker": "^7.6.0",

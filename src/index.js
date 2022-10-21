@@ -4,7 +4,7 @@ require("dotenv").config();
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
-const swaggerUI = require("swagger-ui-express");
+// const swaggerUI = require("swagger-ui-express");
 
 //import local dependencies
 const { userRoutesV1, authRoutesV1, carsRoutesV1 } = require("./routes/index.js");
@@ -13,8 +13,8 @@ const { sequelize: db } = require("./models/index.js");
 const server = express();
 
 //swagger api docs
-const apiDocs = require("../docs/apidocs.json");
-server.use("/api-docs", swaggerUI.serve, swaggerUI.setup(apiDocs));
+// const apiDocs = require("../docs/apidocs.json");
+// server.use("/api-docs", swaggerUI.serve, swaggerUI.setup(apiDocs));
 
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
