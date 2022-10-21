@@ -1,76 +1,1778 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.0.0",
   "info": {
-    "title": "Car-Management-API",
-    "description": "Challenge 6 Binar - Car Management API",
-    "contact": {
-      "email": "hyrezaalf@gmail.com"
-    },
-    "version": "1.0.0"
+    "title": "Cars Management API",
+    "description": "## Introduction\n\nThis project is a implementation of a Car Management API in [Node.js](https://nodejs.org/en/). It uses [Express](https://expressjs.com/) as web framework and [PostgreSQL](https://www.postgresql.org/) as database.\n\nThis application allows new users to register and authenticate using the JSON web token. Registered member can view the list of available cars . Admin has additional privileges such as adding new cars to databases or other actions to manage cars & users.",
+    "contact": {},
+    "version": "1.0"
   },
   "servers": [
     {
-      "url": "http://localhost:5000/"
-    }
-  ],
-  "tags": [
-    {
-      "name": "users",
-      "description": "Everything about users"
+      "url": "http://localhost:5000",
+      "variables": {}
     }
   ],
   "paths": {
-    "/users/api/v1": {
-      "get": {
-        "tags": ["users"],
-        "summary": "Get all Users",
-        "description": "Dapatkan semua data list pengguna",
-        "operationId": "getUsers",
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/users"
+    "/auth/api/v1/signIn": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Sign In",
+        "description": "This endpoint is to make a record of arrival by signing, enter a email and password in order to gain access to a API resources",
+        "operationId": "SignIn",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "encoding": {},
+              "schema": {
+                "required": ["email", "password"],
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "supermin@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "pass123"
+                  }
                 }
               }
             }
           },
-          "400": {
-            "description": "Invalid ID supplied"
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/m200"
+                    },
+                    {
+                      "example": {
+                        "status": "success",
+                        "message": "Successfully sign in !",
+                        "data": {
+                          "id": "3ab5e40b-7999-4e2a-8916-a952f2900bef",
+                          "name": "supermin",
+                          "email": "supermin@gmail.com",
+                          "role": "super admin"
+                        },
+                        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNhYjVlNDBiLTc5OTktNGUyYS04OTE2LWE5NTJmMjkwMGJlZiIsIm5hbWUiOiJzdXBlcm1pbiIsImVtYWlsIjoic3VwZXJtaW5AZ21haWwuY29tIiwicm9sZSI6InN1cGVyIGFkbWluIiwiaWF0IjoxNjY2MzMxNTk5LCJleHAiOjE2NjYzMzUxOTl9.r4GznvLPafVzbePQ1o28_9-NSdxXRAI9o_Ejm6tzYRw"
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "success",
+                  "message": "Successfully sign in !",
+                  "data": {
+                    "id": "3ab5e40b-7999-4e2a-8916-a952f2900bef",
+                    "name": "supermin",
+                    "email": "supermin@gmail.com",
+                    "role": "super admin"
+                  },
+                  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNhYjVlNDBiLTc5OTktNGUyYS04OTE2LWE5NTJmMjkwMGJlZiIsIm5hbWUiOiJzdXBlcm1pbiIsImVtYWlsIjoic3VwZXJtaW5AZ21haWwuY29tIiwicm9sZSI6InN1cGVyIGFkbWluIiwiaWF0IjoxNjY2MzMxNTk5LCJleHAiOjE2NjYzMzUxOTl9.r4GznvLPafVzbePQ1o28_9-NSdxXRAI9o_Ejm6tzYRw"
+                }
+              }
+            }
           },
           "404": {
-            "description": "Pet not found"
-          },
-          "405": {
-            "description": "Validation exception"
+            "description": "Not Found",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/m4041"
+                    },
+                    {
+                      "example": {
+                        "status": "error",
+                        "message": "Username or password is incorrect"
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "error",
+                  "message": "Username or password is incorrect"
+                }
+              }
+            }
           }
-        }
+        },
+        "deprecated": false
+      }
+    },
+    "/auth/api/v1/signUp": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Sign Up",
+        "description": "This endpoint used to create a new member registration for an existing user. you must specify your data and it will be sent from the request body.",
+        "operationId": "SignUp",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "encoding": {},
+              "schema": {
+                "required": ["name", "email", "password", "confirmPassword"],
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "member"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "member@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "pass123"
+                  },
+                  "confirmPassword": {
+                    "type": "string",
+                    "example": "pass123"
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/m2001"
+                    },
+                    {
+                      "example": {
+                        "status": "success",
+                        "message": "Successfully sign up !",
+                        "data": {
+                          "id": "06811c73-77c1-45e5-9f52-0172838551da",
+                          "name": "member",
+                          "email": "member@gmail.com",
+                          "role": "member"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "success",
+                  "message": "Successfully sign up !",
+                  "data": {
+                    "id": "06811c73-77c1-45e5-9f52-0172838551da",
+                    "name": "member",
+                    "email": "member@gmail.com",
+                    "role": "member"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/auth/api/v1/signOut": {
+      "delete": {
+        "tags": ["Auth"],
+        "summary": "Sign Out",
+        "description": "This endpoint used to signs the user out by remove user token cridential",
+        "operationId": "SignOut",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/m2002"
+                    },
+                    {
+                      "example": {
+                        "status": "success",
+                        "message": "Successfully sign out !",
+                        "data": {
+                          "id": "54dbda24-1fe9-4b5e-a133-80e7f06cb7c1",
+                          "name": "member",
+                          "email": "member@gmail.com",
+                          "password": "$argon2id$v=19$m=65536,t=3,p=4$r2919x0MmN5LcnvPRTom8w$Z2TFW49wZ1MtzZ7Sv0hz+8OcZojvR7f4/BKOZa9c6Ew",
+                          "role": "member",
+                          "refreshToken": null,
+                          "createdAt": "2022-10-21T05:38:33.481Z",
+                          "updatedAt": "2022-10-21T06:00:45.773Z"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "success",
+                  "message": "Successfully sign out !",
+                  "data": {
+                    "id": "54dbda24-1fe9-4b5e-a133-80e7f06cb7c1",
+                    "name": "member",
+                    "email": "member@gmail.com",
+                    "password": "$argon2id$v=19$m=65536,t=3,p=4$r2919x0MmN5LcnvPRTom8w$Z2TFW49wZ1MtzZ7Sv0hz+8OcZojvR7f4/BKOZa9c6Ew",
+                    "role": "member",
+                    "refreshToken": null,
+                    "createdAt": "2022-10-21T05:38:33.481Z",
+                    "updatedAt": "2022-10-21T06:00:45.773Z"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/m4041"
+                    },
+                    {
+                      "example": {
+                        "status": "error",
+                        "message": "Error you have no authoritative information "
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "error",
+                  "message": "Error you have no authoritative information "
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/users/api/v1": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get Users List",
+        "description": "This endpoint is useful for displaying a list of available users, resource can only be accessed by admin & super admin",
+        "operationId": "GetUsersList",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/m2003"
+                    },
+                    {
+                      "example": {
+                        "status": "success",
+                        "message": "Successfully got users list",
+                        "data": [
+                          {
+                            "id": "06811c73-77c1-45e5-9f52-0172838551da",
+                            "name": "member",
+                            "email": "member5@gmail.com",
+                            "role": "member"
+                          },
+                          {
+                            "id": "bb9d4447-5bb2-4738-99c9-57d5bbd11627",
+                            "name": "member",
+                            "email": "member1@gmail.com",
+                            "role": "member"
+                          },
+                          {
+                            "id": "f3e8837c-3e05-4764-b402-132dce787545",
+                            "name": "member",
+                            "email": "member2@gmail.com",
+                            "role": "member"
+                          },
+                          {
+                            "id": "54dbda24-1fe9-4b5e-a133-80e7f06cb7c1",
+                            "name": "member",
+                            "email": "member@gmail.com",
+                            "role": "member"
+                          },
+                          {
+                            "id": "3ab5e40b-7999-4e2a-8916-a952f2900bef",
+                            "name": "supermin",
+                            "email": "supermin@gmail.com",
+                            "role": "super admin"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "success",
+                  "message": "Successfully got users list",
+                  "data": [
+                    {
+                      "id": "06811c73-77c1-45e5-9f52-0172838551da",
+                      "name": "member",
+                      "email": "member5@gmail.com",
+                      "role": "member"
+                    },
+                    {
+                      "id": "bb9d4447-5bb2-4738-99c9-57d5bbd11627",
+                      "name": "member",
+                      "email": "member1@gmail.com",
+                      "role": "member"
+                    },
+                    {
+                      "id": "f3e8837c-3e05-4764-b402-132dce787545",
+                      "name": "member",
+                      "email": "member2@gmail.com",
+                      "role": "member"
+                    },
+                    {
+                      "id": "54dbda24-1fe9-4b5e-a133-80e7f06cb7c1",
+                      "name": "member",
+                      "email": "member@gmail.com",
+                      "role": "member"
+                    },
+                    {
+                      "id": "3ab5e40b-7999-4e2a-8916-a952f2900bef",
+                      "name": "supermin",
+                      "email": "supermin@gmail.com",
+                      "role": "super admin"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["Users"],
+        "summary": "Create User",
+        "description": "This endpoint is use to create a user, resource can only be accessed by super admin.",
+        "operationId": "CreateUser",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "encoding": {},
+              "schema": {
+                "required": [
+                  "name",
+                  "email",
+                  "password",
+                  "confirmPassword",
+                  "role"
+                ],
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "admin tamvan"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "admin2@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "pass123"
+                  },
+                  "confirmPassword": {
+                    "type": "string",
+                    "example": "pass123"
+                  },
+                  "role": {
+                    "type": "string",
+                    "example": "admin"
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/m2001"
+                    },
+                    {
+                      "example": {
+                        "status": "success",
+                        "message": "Successfully created user",
+                        "data": {
+                          "id": "6748c8f1-cf70-468c-aa27-216902add8e5",
+                          "name": "admin tamvan",
+                          "email": "admin@gmail.com",
+                          "role": "admin"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "success",
+                  "message": "Successfully created user",
+                  "data": {
+                    "id": "6748c8f1-cf70-468c-aa27-216902add8e5",
+                    "name": "admin tamvan",
+                    "email": "admin@gmail.com",
+                    "role": "admin"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/api/v1/getCurrentUser": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get Current User",
+        "description": "This endpoint is use for displaying recent users",
+        "operationId": "GetCurrentUser",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/m2001"
+                    },
+                    {
+                      "example": {
+                        "status": "success",
+                        "message": "Successfully got current user with auth cridential : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNhYjVlNDBiLTc5OTktNGUyYS04OTE2LWE5NTJmMjkwMGJlZiIsIm5hbWUiOiJzdXBlcm1pbiIsImVtYWlsIjoic3VwZXJtaW5AZ21haWwuY29tIiwicm9sZSI6InN1cGVyIGFkbWluIiwiaWF0IjoxNjY2MzMyNzEwLCJleHAiOjE2NjY0MTkxMTB9.DN-9BdG7OeVnx-8iEuf8_Yd8bLZhRYT3Af6mhwdZhm4",
+                        "data": {
+                          "id": "3ab5e40b-7999-4e2a-8916-a952f2900bef",
+                          "name": "supermin",
+                          "email": "supermin@gmail.com",
+                          "role": "super admin"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "success",
+                  "message": "Successfully got current user with auth cridential : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNhYjVlNDBiLTc5OTktNGUyYS04OTE2LWE5NTJmMjkwMGJlZiIsIm5hbWUiOiJzdXBlcm1pbiIsImVtYWlsIjoic3VwZXJtaW5AZ21haWwuY29tIiwicm9sZSI6InN1cGVyIGFkbWluIiwiaWF0IjoxNjY2MzMyNzEwLCJleHAiOjE2NjY0MTkxMTB9.DN-9BdG7OeVnx-8iEuf8_Yd8bLZhRYT3Af6mhwdZhm4",
+                  "data": {
+                    "id": "3ab5e40b-7999-4e2a-8916-a952f2900bef",
+                    "name": "supermin",
+                    "email": "supermin@gmail.com",
+                    "role": "super admin"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/api/v1/f3e8837c-3e05-4764-b402-132dce78754": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get User By ID",
+        "description": "This endpoint is use for display a user by id, resource can only be accessed by admin & super admin.",
+        "operationId": "GetUserByID",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/m2001"
+                    },
+                    {
+                      "example": {
+                        "status": "success",
+                        "message": "Successfully got user with id : f3e8837c-3e05-4764-b402-132dce787545",
+                        "data": {
+                          "id": "f3e8837c-3e05-4764-b402-132dce787545",
+                          "name": "member",
+                          "email": "member2@gmail.com",
+                          "role": "member"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "success",
+                  "message": "Successfully got user with id : f3e8837c-3e05-4764-b402-132dce787545",
+                  "data": {
+                    "id": "f3e8837c-3e05-4764-b402-132dce787545",
+                    "name": "member",
+                    "email": "member2@gmail.com",
+                    "role": "member"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/api/v1/54dbda24-1fe9-4b5e-a133-80e7f06cb7c1": {
+      "put": {
+        "tags": ["Users"],
+        "summary": "Update User",
+        "description": "This endpoint is use for update a user by id, resource can only be accessed by super admin.\\\\",
+        "operationId": "UpdateUser",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "encoding": {},
+              "schema": {
+                "required": [
+                  "name",
+                  "email",
+                  "password",
+                  "confirmPassword",
+                  "role"
+                ],
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "updated Member"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "memberupdater@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "pass123"
+                  },
+                  "confirmPassword": {
+                    "type": "string",
+                    "example": "pass123"
+                  },
+                  "role": {
+                    "type": "string",
+                    "example": "member"
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/m2001"
+                    },
+                    {
+                      "example": {
+                        "status": "success",
+                        "message": "Successfully updated user with id : 54dbda24-1fe9-4b5e-a133-80e7f06cb7c1",
+                        "data": {
+                          "id": "54dbda24-1fe9-4b5e-a133-80e7f06cb7c1",
+                          "name": "updated Member",
+                          "email": "memberupdater@gmail.com",
+                          "role": "member"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "success",
+                  "message": "Successfully updated user with id : 54dbda24-1fe9-4b5e-a133-80e7f06cb7c1",
+                  "data": {
+                    "id": "54dbda24-1fe9-4b5e-a133-80e7f06cb7c1",
+                    "name": "updated Member",
+                    "email": "memberupdater@gmail.com",
+                    "role": "member"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/api/v1/06811c73-77c1-45e5-9f52-0172838551daza": {
+      "delete": {
+        "tags": ["Users"],
+        "summary": "Remove User",
+        "description": "This endpoint is use for remove user by id, resource can only be accessed by super admin.",
+        "operationId": "RemoveUser",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/m4041"
+                    },
+                    {
+                      "example": {
+                        "status": "success",
+                        "message": "Successfully removed user with id : ccbb575a-450c-499c-ad1f-3e374c9ab826"
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "success",
+                  "message": "Successfully removed user with id : ccbb575a-450c-499c-ad1f-3e374c9ab826"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/cars/api/v1": {
+      "get": {
+        "tags": ["Cars"],
+        "summary": "Get Cars List",
+        "description": "This endpoint is use for displaying a list of available cars, resource can be accessed every user",
+        "operationId": "GetCarsList",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/m2009"
+                    },
+                    {
+                      "example": {
+                        "status": "success",
+                        "message": "Successfully got cars data !",
+                        "data": [
+                          {
+                            "id": "43cfb71b-daaf-4680-ba09-ed7a0dd5bb26",
+                            "car_name": "Lamborgini Aventador Updated",
+                            "car_size": "Large",
+                            "car_type": "Sport Car",
+                            "car_photo": "/static/1666277306258-901950.jpg",
+                            "car_price": 123123112,
+                            "car_availability": true,
+                            "createdBy": "admin",
+                            "updatedBy": "",
+                            "deletedBy": "",
+                            "createdAt": "2022-10-20T14:48:26.279Z",
+                            "updatedAt": "2022-10-20T14:48:26.279Z"
+                          },
+                          {
+                            "id": "8a7451d6-dca5-4ec1-a793-789037cf84e9",
+                            "car_name": "Lamborgini Aventador Updated",
+                            "car_size": "Large",
+                            "car_type": "Sport Car",
+                            "car_photo": "/static/1666280948949-pexels-alexgtacar-1592384.jpg",
+                            "car_price": 123123112,
+                            "car_availability": true,
+                            "createdBy": "supermin",
+                            "updatedBy": "",
+                            "deletedBy": "",
+                            "createdAt": "2022-10-20T15:49:08.962Z",
+                            "updatedAt": "2022-10-20T15:49:08.962Z"
+                          },
+                          {
+                            "id": "b0981e84-dbcd-481b-92b4-034f9cb69ea6",
+                            "car_name": "Lamborgini Aventador Updated",
+                            "car_size": "Large",
+                            "car_type": "Sport Car",
+                            "car_photo": "/static/1666281165305-pexels-alexgtacar-1592384.jpg",
+                            "car_price": 123123112,
+                            "car_availability": true,
+                            "createdBy": "supermin",
+                            "updatedBy": "",
+                            "deletedBy": "",
+                            "createdAt": "2022-10-20T15:52:45.321Z",
+                            "updatedAt": "2022-10-20T15:52:45.321Z"
+                          },
+                          {
+                            "id": "50d4d87d-3a6d-4315-a4fa-08274905c4fa",
+                            "car_name": "Lamborgini Aventador Updated",
+                            "car_size": "Large",
+                            "car_type": "Sport Car",
+                            "car_photo": "/static/1666281168136-pexels-alexgtacar-1592384.jpg",
+                            "car_price": 123123112,
+                            "car_availability": true,
+                            "createdBy": "supermin",
+                            "updatedBy": "",
+                            "deletedBy": "",
+                            "createdAt": "2022-10-20T15:52:48.145Z",
+                            "updatedAt": "2022-10-20T15:52:48.145Z"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "success",
+                  "message": "Successfully got cars data !",
+                  "data": [
+                    {
+                      "id": "43cfb71b-daaf-4680-ba09-ed7a0dd5bb26",
+                      "car_name": "Lamborgini Aventador Updated",
+                      "car_size": "Large",
+                      "car_type": "Sport Car",
+                      "car_photo": "/static/1666277306258-901950.jpg",
+                      "car_price": 123123112,
+                      "car_availability": true,
+                      "createdBy": "admin",
+                      "updatedBy": "",
+                      "deletedBy": "",
+                      "createdAt": "2022-10-20T14:48:26.279Z",
+                      "updatedAt": "2022-10-20T14:48:26.279Z"
+                    },
+                    {
+                      "id": "8a7451d6-dca5-4ec1-a793-789037cf84e9",
+                      "car_name": "Lamborgini Aventador Updated",
+                      "car_size": "Large",
+                      "car_type": "Sport Car",
+                      "car_photo": "/static/1666280948949-pexels-alexgtacar-1592384.jpg",
+                      "car_price": 123123112,
+                      "car_availability": true,
+                      "createdBy": "supermin",
+                      "updatedBy": "",
+                      "deletedBy": "",
+                      "createdAt": "2022-10-20T15:49:08.962Z",
+                      "updatedAt": "2022-10-20T15:49:08.962Z"
+                    },
+                    {
+                      "id": "b0981e84-dbcd-481b-92b4-034f9cb69ea6",
+                      "car_name": "Lamborgini Aventador Updated",
+                      "car_size": "Large",
+                      "car_type": "Sport Car",
+                      "car_photo": "/static/1666281165305-pexels-alexgtacar-1592384.jpg",
+                      "car_price": 123123112,
+                      "car_availability": true,
+                      "createdBy": "supermin",
+                      "updatedBy": "",
+                      "deletedBy": "",
+                      "createdAt": "2022-10-20T15:52:45.321Z",
+                      "updatedAt": "2022-10-20T15:52:45.321Z"
+                    },
+                    {
+                      "id": "50d4d87d-3a6d-4315-a4fa-08274905c4fa",
+                      "car_name": "Lamborgini Aventador Updated",
+                      "car_size": "Large",
+                      "car_type": "Sport Car",
+                      "car_photo": "/static/1666281168136-pexels-alexgtacar-1592384.jpg",
+                      "car_price": 123123112,
+                      "car_availability": true,
+                      "createdBy": "supermin",
+                      "updatedBy": "",
+                      "deletedBy": "",
+                      "createdAt": "2022-10-20T15:52:48.145Z",
+                      "updatedAt": "2022-10-20T15:52:48.145Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["Cars"],
+        "summary": "Post Cars",
+        "description": "This endpoint is use to create a car, resource can only be accessed by admin & super admin.",
+        "operationId": "PostCars",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "car_name",
+                  "car_size",
+                  "car_type",
+                  "car_photo",
+                  "car_price"
+                ],
+                "type": "object",
+                "properties": {
+                  "car_name": {
+                    "type": "string",
+                    "example": "New Car"
+                  },
+                  "car_size": {
+                    "type": "string",
+                    "example": "Large"
+                  },
+                  "car_type": {
+                    "type": "string",
+                    "example": "Sport Car"
+                  },
+                  "car_photo": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "car_price": {
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 123123112
+                  }
+                }
+              },
+              "encoding": {
+                "car_name": {
+                  "style": "form"
+                },
+                "car_size": {
+                  "style": "form"
+                },
+                "car_type": {
+                  "style": "form"
+                },
+                "car_photo": {
+                  "style": "form"
+                },
+                "car_price": {
+                  "style": "form"
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/m20010"
+                    },
+                    {
+                      "example": {
+                        "status": "success",
+                        "message": "Successfully post a new car with id: 65b73c4e-4de8-4af0-8855-2de9bd3c1724 ",
+                        "data": {
+                          "id": "65b73c4e-4de8-4af0-8855-2de9bd3c1724",
+                          "car_availability": true,
+                          "car_name": "New Car",
+                          "car_size": "Large",
+                          "car_type": "Sport Car",
+                          "car_price": 123123112,
+                          "car_photo": "/static/1666337181612-pexels-pavlo-luchkovski-337909.jpg",
+                          "createdBy": "supermin",
+                          "updatedBy": "",
+                          "deletedBy": "",
+                          "updatedAt": "2022-10-21T07:26:21.639Z",
+                          "createdAt": "2022-10-21T07:26:21.639Z"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "success",
+                  "message": "Successfully post a new car with id: 65b73c4e-4de8-4af0-8855-2de9bd3c1724 ",
+                  "data": {
+                    "id": "65b73c4e-4de8-4af0-8855-2de9bd3c1724",
+                    "car_availability": true,
+                    "car_name": "New Car",
+                    "car_size": "Large",
+                    "car_type": "Sport Car",
+                    "car_price": 123123112,
+                    "car_photo": "/static/1666337181612-pexels-pavlo-luchkovski-337909.jpg",
+                    "createdBy": "supermin",
+                    "updatedBy": "",
+                    "deletedBy": "",
+                    "updatedAt": "2022-10-21T07:26:21.639Z",
+                    "createdAt": "2022-10-21T07:26:21.639Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/cars/api/v1/43cfb71b-daaf-4680-ba09-ed7a0dd5bb26": {
+      "get": {
+        "tags": ["Cars"],
+        "summary": "Get Car By Id",
+        "description": "This endpoint is use for display a car by id, resource can only be accessed by every user.",
+        "operationId": "GetCarById",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/m4041"
+                    },
+                    {
+                      "example": {
+                        "status": "error",
+                        "message": "Error : car not found"
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "error",
+                  "message": "Error : car not found"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/cars/api/v1/65b73c4e-4de8-4af0-8855-2de9bd3c1724": {
+      "put": {
+        "tags": ["Cars"],
+        "summary": "Update Cars",
+        "description": "This endpoint is use for update a car by id, resource can only be accessed by admin & super admin.",
+        "operationId": "UpdateCars",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "encoding": {},
+              "schema": {
+                "required": [
+                  "car_name",
+                  "car_size",
+                  "car_type",
+                  "car_photo",
+                  "car_price"
+                ],
+                "type": "object",
+                "properties": {
+                  "car_name": {
+                    "type": "string",
+                    "example": "Car Updated"
+                  },
+                  "car_size": {
+                    "type": "string",
+                    "example": "Large"
+                  },
+                  "car_type": {
+                    "type": "string",
+                    "example": "Sport Car"
+                  },
+                  "car_photo": {
+                    "type": "string"
+                  },
+                  "car_price": {
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 123123112
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/m20010"
+                    },
+                    {
+                      "example": {
+                        "status": "success",
+                        "message": "Successfully post a new car with id: 65b73c4e-4de8-4af0-8855-2de9bd3c1724 ",
+                        "data": {
+                          "id": "65b73c4e-4de8-4af0-8855-2de9bd3c1724",
+                          "car_name": "Car Updated",
+                          "car_size": "Large",
+                          "car_type": "Sport Car",
+                          "car_photo": "/static/1666337362918-pexels-alexgtacar-1592384.jpg",
+                          "car_price": 123123112,
+                          "car_availability": true,
+                          "createdBy": "supermin",
+                          "updatedBy": "supermin",
+                          "deletedBy": "",
+                          "createdAt": "2022-10-21T07:26:21.639Z",
+                          "updatedAt": "2022-10-21T07:29:22.997Z"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "success",
+                  "message": "Successfully post a new car with id: 65b73c4e-4de8-4af0-8855-2de9bd3c1724 ",
+                  "data": {
+                    "id": "65b73c4e-4de8-4af0-8855-2de9bd3c1724",
+                    "car_name": "Car Updated",
+                    "car_size": "Large",
+                    "car_type": "Sport Car",
+                    "car_photo": "/static/1666337362918-pexels-alexgtacar-1592384.jpg",
+                    "car_price": 123123112,
+                    "car_availability": true,
+                    "createdBy": "supermin",
+                    "updatedBy": "supermin",
+                    "deletedBy": "",
+                    "createdAt": "2022-10-21T07:26:21.639Z",
+                    "updatedAt": "2022-10-21T07:29:22.997Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "delete": {
+        "tags": ["Cars"],
+        "summary": "Remove Car",
+        "description": "This endpoint is use for remove car by id, resource can only be accessed by admin & super admin.",
+        "operationId": "RemoveCar",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/m20010"
+                    },
+                    {
+                      "example": {
+                        "status": "success",
+                        "message": "Successfully deleted car with id : 65b73c4e-4de8-4af0-8855-2de9bd3c1724",
+                        "data": {
+                          "id": "65b73c4e-4de8-4af0-8855-2de9bd3c1724",
+                          "car_name": "Car Updated",
+                          "car_size": "Large",
+                          "car_type": "Sport Car",
+                          "car_photo": "/static/1666337362918-pexels-alexgtacar-1592384.jpg",
+                          "car_price": 123123112,
+                          "car_availability": false,
+                          "createdBy": "supermin",
+                          "updatedBy": "supermin",
+                          "deletedBy": "supermin",
+                          "createdAt": "2022-10-21T07:26:21.639Z",
+                          "updatedAt": "2022-10-21T07:32:50.143Z"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "success",
+                  "message": "Successfully deleted car with id : 65b73c4e-4de8-4af0-8855-2de9bd3c1724",
+                  "data": {
+                    "id": "65b73c4e-4de8-4af0-8855-2de9bd3c1724",
+                    "car_name": "Car Updated",
+                    "car_size": "Large",
+                    "car_type": "Sport Car",
+                    "car_photo": "/static/1666337362918-pexels-alexgtacar-1592384.jpg",
+                    "car_price": 123123112,
+                    "car_availability": false,
+                    "createdBy": "supermin",
+                    "updatedBy": "supermin",
+                    "deletedBy": "supermin",
+                    "createdAt": "2022-10-21T07:26:21.639Z",
+                    "updatedAt": "2022-10-21T07:32:50.143Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/cars/carsDump": {
+      "get": {
+        "tags": ["Cars"],
+        "summary": "Get Cars Dump",
+        "description": "This endpoint is use display unavailable cars, resource can only be accessed by admin & super admin.",
+        "operationId": "GetCarsDump",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/m2009"
+                    },
+                    {
+                      "example": {
+                        "status": "success",
+                        "message": "Successfully got cars data !",
+                        "data": [
+                          {
+                            "id": "3f3961b3-e3a5-4dac-af25-d6ce4df36696",
+                            "car_name": "UPDATED CARRRRR",
+                            "car_size": "Large",
+                            "car_type": "Sport Car",
+                            "car_photo": "/static/1666281412547-pexels-albin-berlin-296735.jpg",
+                            "car_price": 123123112,
+                            "car_availability": false,
+                            "createdBy": "admin",
+                            "updatedBy": "supermin",
+                            "deletedBy": "supermin",
+                            "createdAt": "2022-10-20T14:46:47.906Z",
+                            "updatedAt": "2022-10-20T16:07:34.136Z"
+                          },
+                          {
+                            "id": "65b73c4e-4de8-4af0-8855-2de9bd3c1724",
+                            "car_name": "Car Updated",
+                            "car_size": "Large",
+                            "car_type": "Sport Car",
+                            "car_photo": "/static/1666337362918-pexels-alexgtacar-1592384.jpg",
+                            "car_price": 123123112,
+                            "car_availability": false,
+                            "createdBy": "supermin",
+                            "updatedBy": "supermin",
+                            "deletedBy": "supermin",
+                            "createdAt": "2022-10-21T07:26:21.639Z",
+                            "updatedAt": "2022-10-21T07:32:50.143Z"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "status": "success",
+                  "message": "Successfully got cars data !",
+                  "data": [
+                    {
+                      "id": "3f3961b3-e3a5-4dac-af25-d6ce4df36696",
+                      "car_name": "UPDATED CARRRRR",
+                      "car_size": "Large",
+                      "car_type": "Sport Car",
+                      "car_photo": "/static/1666281412547-pexels-albin-berlin-296735.jpg",
+                      "car_price": 123123112,
+                      "car_availability": false,
+                      "createdBy": "admin",
+                      "updatedBy": "supermin",
+                      "deletedBy": "supermin",
+                      "createdAt": "2022-10-20T14:46:47.906Z",
+                      "updatedAt": "2022-10-20T16:07:34.136Z"
+                    },
+                    {
+                      "id": "65b73c4e-4de8-4af0-8855-2de9bd3c1724",
+                      "car_name": "Car Updated",
+                      "car_size": "Large",
+                      "car_type": "Sport Car",
+                      "car_photo": "/static/1666337362918-pexels-alexgtacar-1592384.jpg",
+                      "car_price": 123123112,
+                      "car_availability": false,
+                      "createdBy": "supermin",
+                      "updatedBy": "supermin",
+                      "deletedBy": "supermin",
+                      "createdAt": "2022-10-21T07:26:21.639Z",
+                      "updatedAt": "2022-10-21T07:32:50.143Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     }
   },
   "components": {
     "schemas": {
-      "users": {
-        "required": ["name", "photoUrls"],
+      "m200": {
+        "title": "m200",
+        "required": ["status", "message", "data", "accessToken"],
         "type": "object",
         "properties": {
           "status": {
-            "type": "string",
-            "enum": ["success", "failed"],
-            "example": "success"
+            "type": "string"
           },
           "message": {
-            "type": "string",
-            "example": "Successfully got all users list"
+            "type": "string"
           },
           "data": {
-            "type": "object",
-            "example": {}
+            "$ref": "#/components/schemas/Data"
+          },
+          "accessToken": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "status": "success",
+          "message": "Successfully sign in !",
+          "data": {
+            "id": "3ab5e40b-7999-4e2a-8916-a952f2900bef",
+            "name": "supermin",
+            "email": "supermin@gmail.com",
+            "role": "super admin"
+          },
+          "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNhYjVlNDBiLTc5OTktNGUyYS04OTE2LWE5NTJmMjkwMGJlZiIsIm5hbWUiOiJzdXBlcm1pbiIsImVtYWlsIjoic3VwZXJtaW5AZ21haWwuY29tIiwicm9sZSI6InN1cGVyIGFkbWluIiwiaWF0IjoxNjY2MzMxNTk5LCJleHAiOjE2NjYzMzUxOTl9.r4GznvLPafVzbePQ1o28_9-NSdxXRAI9o_Ejm6tzYRw"
+        }
+      },
+      "Data": {
+        "title": "Data",
+        "required": ["id", "name", "email", "role"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "id": "3ab5e40b-7999-4e2a-8916-a952f2900bef",
+          "name": "supermin",
+          "email": "supermin@gmail.com",
+          "role": "super admin"
+        }
+      },
+      "m4041": {
+        "title": "m4041",
+        "required": ["status", "message"],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "status": "error",
+          "message": "Username or password is incorrect"
+        }
+      },
+      "m2001": {
+        "title": "m2001",
+        "required": ["status", "message", "data"],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Data"
+          }
+        },
+        "example": {
+          "status": "success",
+          "message": "Successfully sign up !",
+          "data": {
+            "id": "06811c73-77c1-45e5-9f52-0172838551da",
+            "name": "member",
+            "email": "member@gmail.com",
+            "role": "member"
+          }
+        }
+      },
+      "m2002": {
+        "title": "m2002",
+        "required": ["status", "message", "data"],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Data2"
+          }
+        },
+        "example": {
+          "status": "success",
+          "message": "Successfully sign out !",
+          "data": {
+            "id": "54dbda24-1fe9-4b5e-a133-80e7f06cb7c1",
+            "name": "member",
+            "email": "member@gmail.com",
+            "password": "$argon2id$v=19$m=65536,t=3,p=4$r2919x0MmN5LcnvPRTom8w$Z2TFW49wZ1MtzZ7Sv0hz+8OcZojvR7f4/BKOZa9c6Ew",
+            "role": "member",
+            "refreshToken": null,
+            "createdAt": "2022-10-21T05:38:33.481Z",
+            "updatedAt": "2022-10-21T06:00:45.773Z"
+          }
+        }
+      },
+      "Data2": {
+        "title": "Data2",
+        "required": [
+          "id",
+          "name",
+          "email",
+          "password",
+          "role",
+          "refreshToken",
+          "createdAt",
+          "updatedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "refreshToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "id": "54dbda24-1fe9-4b5e-a133-80e7f06cb7c1",
+          "name": "member",
+          "email": "member@gmail.com",
+          "password": "$argon2id$v=19$m=65536,t=3,p=4$r2919x0MmN5LcnvPRTom8w$Z2TFW49wZ1MtzZ7Sv0hz+8OcZojvR7f4/BKOZa9c6Ew",
+          "role": "member",
+          "refreshToken": null,
+          "createdAt": "2022-10-21T05:38:33.481Z",
+          "updatedAt": "2022-10-21T06:00:45.773Z"
+        }
+      },
+      "m2003": {
+        "title": "m2003",
+        "required": ["status", "message", "data"],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Data"
+            },
+            "description": ""
+          }
+        },
+        "example": {
+          "status": "success",
+          "message": "Successfully got users list",
+          "data": [
+            {
+              "id": "06811c73-77c1-45e5-9f52-0172838551da",
+              "name": "member",
+              "email": "member5@gmail.com",
+              "role": "member"
+            },
+            {
+              "id": "bb9d4447-5bb2-4738-99c9-57d5bbd11627",
+              "name": "member",
+              "email": "member1@gmail.com",
+              "role": "member"
+            },
+            {
+              "id": "f3e8837c-3e05-4764-b402-132dce787545",
+              "name": "member",
+              "email": "member2@gmail.com",
+              "role": "member"
+            },
+            {
+              "id": "54dbda24-1fe9-4b5e-a133-80e7f06cb7c1",
+              "name": "member",
+              "email": "member@gmail.com",
+              "role": "member"
+            },
+            {
+              "id": "3ab5e40b-7999-4e2a-8916-a952f2900bef",
+              "name": "supermin",
+              "email": "supermin@gmail.com",
+              "role": "super admin"
+            }
+          ]
+        }
+      },
+      "m4032": {
+        "title": "m4032",
+        "required": ["message"],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "message": "Error : access denied "
+        }
+      },
+      "m2009": {
+        "title": "m2009",
+        "required": ["status", "message", "data"],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Data8"
+            },
+            "description": ""
+          }
+        },
+        "example": {
+          "status": "success",
+          "message": "Successfully got cars data !",
+          "data": [
+            {
+              "id": "43cfb71b-daaf-4680-ba09-ed7a0dd5bb26",
+              "car_name": "Lamborgini Aventador Updated",
+              "car_size": "Large",
+              "car_type": "Sport Car",
+              "car_photo": "/static/1666277306258-901950.jpg",
+              "car_price": 123123112,
+              "car_availability": true,
+              "createdBy": "admin",
+              "updatedBy": "",
+              "deletedBy": "",
+              "createdAt": "2022-10-20T14:48:26.279Z",
+              "updatedAt": "2022-10-20T14:48:26.279Z"
+            },
+            {
+              "id": "8a7451d6-dca5-4ec1-a793-789037cf84e9",
+              "car_name": "Lamborgini Aventador Updated",
+              "car_size": "Large",
+              "car_type": "Sport Car",
+              "car_photo": "/static/1666280948949-pexels-alexgtacar-1592384.jpg",
+              "car_price": 123123112,
+              "car_availability": true,
+              "createdBy": "supermin",
+              "updatedBy": "",
+              "deletedBy": "",
+              "createdAt": "2022-10-20T15:49:08.962Z",
+              "updatedAt": "2022-10-20T15:49:08.962Z"
+            },
+            {
+              "id": "b0981e84-dbcd-481b-92b4-034f9cb69ea6",
+              "car_name": "Lamborgini Aventador Updated",
+              "car_size": "Large",
+              "car_type": "Sport Car",
+              "car_photo": "/static/1666281165305-pexels-alexgtacar-1592384.jpg",
+              "car_price": 123123112,
+              "car_availability": true,
+              "createdBy": "supermin",
+              "updatedBy": "",
+              "deletedBy": "",
+              "createdAt": "2022-10-20T15:52:45.321Z",
+              "updatedAt": "2022-10-20T15:52:45.321Z"
+            },
+            {
+              "id": "50d4d87d-3a6d-4315-a4fa-08274905c4fa",
+              "car_name": "Lamborgini Aventador Updated",
+              "car_size": "Large",
+              "car_type": "Sport Car",
+              "car_photo": "/static/1666281168136-pexels-alexgtacar-1592384.jpg",
+              "car_price": 123123112,
+              "car_availability": true,
+              "createdBy": "supermin",
+              "updatedBy": "",
+              "deletedBy": "",
+              "createdAt": "2022-10-20T15:52:48.145Z",
+              "updatedAt": "2022-10-20T15:52:48.145Z"
+            }
+          ]
+        }
+      },
+      "Data8": {
+        "title": "Data8",
+        "required": [
+          "id",
+          "car_name",
+          "car_size",
+          "car_type",
+          "car_photo",
+          "car_price",
+          "car_availability",
+          "createdBy",
+          "updatedBy",
+          "deletedBy",
+          "createdAt",
+          "updatedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "car_name": {
+            "type": "string"
+          },
+          "car_size": {
+            "type": "string"
+          },
+          "car_type": {
+            "type": "string"
+          },
+          "car_photo": {
+            "type": "string"
+          },
+          "car_price": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "car_availability": {
+            "type": "boolean"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "updatedBy": {
+            "type": "string"
+          },
+          "deletedBy": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "id": "43cfb71b-daaf-4680-ba09-ed7a0dd5bb26",
+          "car_name": "Lamborgini Aventador Updated",
+          "car_size": "Large",
+          "car_type": "Sport Car",
+          "car_photo": "/static/1666277306258-901950.jpg",
+          "car_price": 123123112,
+          "car_availability": true,
+          "createdBy": "admin",
+          "updatedBy": "",
+          "deletedBy": "",
+          "createdAt": "2022-10-20T14:48:26.279Z",
+          "updatedAt": "2022-10-20T14:48:26.279Z"
+        }
+      },
+      "m20010": {
+        "title": "m20010",
+        "required": ["status", "message", "data"],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Data8"
+          }
+        },
+        "example": {
+          "status": "success",
+          "message": "Successfully got car data !",
+          "data": {
+            "id": "43cfb71b-daaf-4680-ba09-ed7a0dd5bb26",
+            "car_name": "Lamborgini Aventador Updated",
+            "car_size": "Large",
+            "car_type": "Sport Car",
+            "car_photo": "/static/1666277306258-901950.jpg",
+            "car_price": 123123112,
+            "car_availability": true,
+            "createdBy": "admin",
+            "updatedBy": "",
+            "deletedBy": "",
+            "createdAt": "2022-10-20T14:48:26.279Z",
+            "updatedAt": "2022-10-20T14:48:26.279Z"
           }
         }
       }
+    },
+    "securitySchemes": {
+      "bearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
     }
-  }
+  },
+  "security": [],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "API Authentication is processes of certifying the identity of users trying to access resources on the server."
+    },
+    {
+      "name": "Users",
+      "description": "User endpoints is used to manage available users, such as adding, updating, and several other actions. Some resources can only be accessed by the admin & super admin."
+    },
+    {
+      "name": "Cars",
+      "description": "Cars endpoints is used to manage available cars, such as adding, updating, and several other actions. Some resources can only be accessed by the admin & super admin."
+    }
+  ]
 }

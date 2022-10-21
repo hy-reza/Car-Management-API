@@ -51,12 +51,13 @@ module.exports = (sequelize, DataTypes) => {
       },
       car_availability: {
         type: DataTypes.BOOLEAN,
+        defaultValue: true,
         allowNull: false,
         validate: {
           notEmpty: true,
         },
       },
-      crietedBy: {
+      createdBy: {
         type: DataTypes.STRING,
         allowNull: false,
       },

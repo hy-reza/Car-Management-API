@@ -14,6 +14,12 @@ const errorMessage = require("../../../services/errorMessage.js");
 exports.getUsers = async (req, res) => {
   try {
     const response = await getUsersList();
+    if (!response) {
+      res.status(404).json({
+        status: "error",
+        message: "Error : users not found",
+      });
+    }
     res.status(200).json({
       status: "success",
       message: "Successfully got users list",
@@ -141,10 +147,11 @@ exports.updateUser = async (req, res) => {
   try {
     const response = await updateUser(id, userData, findedUser);
 
+    const { id: userid, name, email, role } = response;
     res.status(200).json({
       status: "success",
       message: `Successfully updated user with id : ${id}`,
-      data: response,
+      data: { id: userid, name, email, role },
     });
   } catch (error) {
     errorMessage(error, res);
@@ -155,7 +162,13 @@ exports.updateUser = async (req, res) => {
 exports.removeUser = async (req, res) => {
   const { id } = req.params;
   try {
-    await removeUser(id);
+    const response = await removeUser(id);
+    if (!response) {
+      return res.status(404).json({
+        status: "error",
+        message: `Error user with id : ${id} not found`,
+      });
+    }
     res.status(200).json({
       status: "success",
       message: `Successfully removed user with id : ${id}`,

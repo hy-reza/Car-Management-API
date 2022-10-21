@@ -9,9 +9,6 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
         allowNull: false,
-        validate: {
-          notEmpty: true,
-        },
       },
       car_name: {
         type: Sequelize.STRING,
@@ -58,17 +55,17 @@ module.exports = {
           notEmpty: true,
         },
       },
-      crietedBy: {
+      createdBy: {
         type: Sequelize.STRING,
         allowNull: false,
       },
       updatedBy: {
         type: Sequelize.STRING,
-        allowNull: true,
+        allowNull: false,
       },
       deletedBy: {
         type: Sequelize.STRING,
-        allowNull: true,
+        allowNull: false,
       },
       createdAt: {
         type: Sequelize.DATE,

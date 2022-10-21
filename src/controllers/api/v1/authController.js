@@ -35,7 +35,7 @@ exports.signUp = async (req, res) => {
     const { id, name, email, role } = await createUser(dataUser);
     res.status(200).json({
       status: "success",
-      message: "Successfully registered",
+      message: "Successfully sign up !",
       data: { id, name, email, role },
     });
   } catch (error) {
@@ -84,9 +84,16 @@ exports.signIn = async (req, res) => {
       httpOnly: true,
       maxAge: 60 * 60 * 24 * 1000,
     });
+    const {
+      id: userid,
+      name: username,
+      email: useremail,
+      role: userrole,
+    } = updatedUser;
     res.status(200).json({
       status: "success",
       message: "Successfully sign in !",
+      data: { id: userid, name: username, email: useremail, role: userrole },
       accessToken: accessToken,
     });
   } catch (error) {
@@ -119,7 +126,7 @@ exports.signOut = async (req, res) => {
     res.clearCookie("refreshToken");
     res.status(200).json({
       status: "success",
-      message: `Successfully updated user with id: ${id}`,
+      message: `Successfully sign out !`,
       data: updatedUser,
     });
   } catch (error) {

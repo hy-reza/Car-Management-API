@@ -7,7 +7,7 @@ const morgan = require("morgan");
 const swaggerUI = require("swagger-ui-express");
 
 //import local dependencies
-const { userRoutesV1, authRoutesV1 } = require("./routes/index.js");
+const { userRoutesV1, authRoutesV1, carsRoutesV1 } = require("./routes/index.js");
 const { sequelize: db } = require("./models/index.js");
 
 const server = express();
@@ -21,10 +21,12 @@ server.use(express.urlencoded({ extended: true }));
 server.use(cookieParser());
 server.use(cors());
 server.use(morgan("dev"));
-server.use(express.static("src/views"));
+server.use(express.static("static"));
+
 
 server.use("/users", userRoutesV1);
 server.use("/auth", authRoutesV1);
+server.use("/cars", carsRoutesV1);
 
 const PORT = process.env.HTTP_PORT || 3000;
 try {
