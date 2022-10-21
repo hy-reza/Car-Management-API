@@ -53,5 +53,10 @@ https://documenter.getpostman.com/view/19659497/2s84Dj26zB
    ```sh
    yarn start
    ```
+5. Login as Super User
+   ```sh
+   email : supermin@gmail.com
+   password: pass123
+   ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
