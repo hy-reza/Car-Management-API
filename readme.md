@@ -8,7 +8,9 @@
 </div>
 
 ## ABOUT THE PROJECT
+This project is a implementation of a Car Management API in Node.js. It uses Express as web framework and PostgreSQL as database.
 
+This application allows new users to register and authenticate using the JSON web token. Registered member can view the list of available cars . Admin has additional privileges such as adding new cars to databases or other actions to manage cars & users.
 
 ### Built With
 
