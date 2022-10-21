@@ -79,7 +79,6 @@ exports.signIn = async (req, res) => {
     );
 
     const updatedUser = await updateUser(id, { refreshToken }, user);
-    console.log({ updatedUser });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: 60 * 60 * 24 * 1000,

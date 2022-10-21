@@ -1,5 +1,4 @@
 exports.superminOnly = (req, res, next) => {
-  console.log(req.user.role);
   if (req.user.role === "super admin") {
     next();
   } else {
@@ -8,7 +7,6 @@ exports.superminOnly = (req, res, next) => {
 };
 
 exports.adminOnly = (req, res, next) => {
-  console.log(req.user.role);
   if (req.user.role === "admin" || req.user.role === "super admin") {
     next();
   } else {

@@ -31,9 +31,9 @@ server.use("/cars", carsRoutesV1);
 const PORT = process.env.HTTP_PORT || 3000;
 try {
   db.authenticate();
-  console.log("DB authenticate successfully");
+  console.info("DB authenticate successfully");
   server.listen(PORT, () => {
-    console.log(`Server allready listening for request on port ${PORT}...`);
+    console.info(`Server allready listening for request on port ${PORT}...`);
   });
 } catch (e) {
   console.error(e);

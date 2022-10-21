@@ -35,7 +35,6 @@ exports.getUserById = async (req, res) => {
   const { id } = req.params;
   try {
     const response = await getUser(id);
-    console.log(response);
     if (!response) {
       return res.status(404).json({
         status: "error",
