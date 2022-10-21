@@ -8,15 +8,17 @@
 </div>
 
 ## ABOUT THE PROJECT
+
 This project is a implementation of a Car Management API in Node.js. It uses Express as web framework and PostgreSQL as database.
 
 This application allows new users to register and authenticate using the JSON web token. Registered member can view the list of available cars . Admin has additional privileges such as adding new cars to databases or other actions to manage cars & users.
 
 ### API Documentation
-Documentated with postman 
-access here : 
-https://documenter.getpostman.com/view/19659497/2s84Dj26zB
 
+Documentated with postman
+<br>
+access here :
+https://documenter.getpostman.com/view/19659497/2s84Dj26zB
 
 ### Built With
 
@@ -24,9 +26,7 @@ https://documenter.getpostman.com/view/19659497/2s84Dj26zB
 - Sequelize
 - Postgres
 
-
 <p align="right">(<a href="#top">back to top</a>)</p>
-
 
 ## Getting Started
 
