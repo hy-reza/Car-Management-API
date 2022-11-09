@@ -16,5 +16,6 @@ module.exports = {
     dialect: DB_DIALECT,
     username: DB_USERNAME,
     password: DB_PASSWORD,
+    host: DB_HOST,
   },
 };
