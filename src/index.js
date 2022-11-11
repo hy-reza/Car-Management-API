@@ -32,7 +32,7 @@ server.get('/', (req, res) => {
   res.send('welcome to my Cars API !')
 })
 
-const PORT = process.env.HTTP_PORT || 3000;
+const PORT = process.env.PORT || 3000;
 try {
   db.authenticate();
   console.info("DB authenticate successfully");
