@@ -28,6 +28,10 @@ server.use("/users", userRoutesV1);
 server.use("/auth", authRoutesV1);
 server.use("/cars", carsRoutesV1);
 
+server.get('/', (req, res) => {
+  res.send('welcome to my Cars API !')
+})
+
 const PORT = process.env.HTTP_PORT || 3000;
 try {
   db.authenticate();
