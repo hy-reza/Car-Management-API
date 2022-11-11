@@ -13,9 +13,9 @@ module.exports = {
   },
   production: {
     url: DB_URL,
-    dialect: DB_DIALECT,
-    username: DB_USERNAME,
-    password: DB_PASSWORD,
-    host: DB_HOST,
+    // dialect: DB_DIALECT,
+    // username: DB_USERNAME,
+    // password: DB_PASSWORD,
+    // host: DB_HOST,
   },
 };
